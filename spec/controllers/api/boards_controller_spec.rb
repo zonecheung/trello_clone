@@ -17,7 +17,7 @@ describe Api::BoardsController, 'index', type: :controller do
 end
 
 describe Api::BoardsController, 'show' do
-  let!(:board) { FactoryBot.create(:board) }
+  let(:board) { FactoryBot.create(:board) }
 
   it 'should return the board with the task groups' do
     get :show, params: { id: board.id }, format: :json
