@@ -1,6 +1,6 @@
 module Api
   class BoardsController < ApplicationController
-    before_action :set_board, only: %i[show update destroy]
+    before_action :set_board, only: %i[update destroy]
 
     # GET /api/boards.json
     def index
@@ -9,7 +9,8 @@ module Api
 
     # GET /api/boards/1.json
     def show
-      render json: @board
+      @board = Board.includes(task_groups: :tasks).where(id: params[:id]).first
+      @no_task_groups = params[:no_task_groups] == 'true'
     end
 
     # POST /api/boards.json
