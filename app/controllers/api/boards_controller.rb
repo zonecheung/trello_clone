@@ -1,6 +1,7 @@
 module Api
   class BoardsController < ApplicationController
     before_action :set_board, only: %i[update destroy]
+    before_action :set_no_task_groups, only: %i[show latest]
 
     # GET /api/boards.json
     def index
@@ -10,7 +11,6 @@ module Api
     # GET /api/boards/1.json
     def show
       @board = Board.includes(task_groups: :tasks).where(id: params[:id]).first
-      @no_task_groups = params[:no_task_groups] == 'true'
     end
 
     # POST /api/boards.json
@@ -45,11 +45,21 @@ module Api
       end
     end
 
+    # GET /api/boards/latest.json
+    def latest
+      @board = Board.includes(task_groups: :tasks).recently_updated.first
+      render 'show'
+    end
+
     private
 
     # Use callbacks to share common setup or constraints between actions.
     def set_board
       @board = Board.find(params[:id])
+    end
+
+    def set_no_task_groups
+      @no_task_groups = params[:no_task_groups] == 'true'
     end
 
     # Never trust parameters from the scary internet,

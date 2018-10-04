@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   namespace :api, defaults: { format: :json } do
     resources :boards do
+      get :latest, on: :collection
+
       resources :task_groups do
         patch :move_to_position, on: :member
 
@@ -10,4 +12,6 @@ Rails.application.routes.draw do
       end
     end
   end
+
+  root to: 'welcome#index'
 end

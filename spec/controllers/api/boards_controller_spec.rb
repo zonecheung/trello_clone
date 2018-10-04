@@ -177,3 +177,31 @@ describe Api::BoardsController, 'destroy', type: :controller do
     end
   end
 end
+
+describe Api::BoardsController, 'latest', type: :controller do
+  let!(:board1) { FactoryBot.create(:board, updated_at: 1.week.ago) }
+  let!(:board2) { FactoryBot.create(:board, updated_at: 1.day.ago) }
+  let!(:board3) { FactoryBot.create(:board, updated_at: 1.month.ago) }
+
+  it 'should return the board with the task groups' do
+    get :latest, format: :json
+    json = JSON.parse(response.body)
+    expect(json['title']).to eql(board2.title)
+    expect(json['task_groups']).not_to be_blank
+    expect(json['task_groups'][0]['tasks']).to be_a_kind_of(Array)
+  end
+
+  it 'should be successful' do
+    get :latest, format: :json
+    expect(response).to be_successful
+  end
+
+  describe 'when params[:no_task_groups] is set to true' do
+    it 'should return only the board' do
+      get :latest, params: { no_task_groups: true }, format: :json
+      json = JSON.parse(response.body)
+      expect(json['title']).to eql(board2.title)
+      expect(json['task_groups']).to be_blank
+    end
+  end
+end

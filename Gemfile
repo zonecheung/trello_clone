@@ -37,8 +37,11 @@ gem 'jbuilder', '~> 2.7.0'
 gem 'bootsnap', '>= 1.1.0', require: false
 
 gem 'acts_as_list', '~> 0.9.16'
+gem 'bulma-rails', '~> 0.7.1'
+gem 'foreman', '~> 0.64.0'
 gem 'haml', '~> 5.0.4'
 gem 'pg', '~> 1.1.3'
+gem 'webpacker', '~> 3.5.5'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

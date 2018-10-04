@@ -1,0 +1,27 @@
+= javascript_pack_tag 'board_vue'
+
+#board-vue
+  %nav.navbar(role="navigation" aria-label="main navigation")
+    .navbar-brand
+      {{board.title}}
+  .columns
+    .column.has-background-grey-light(v-for="task_group in board.task_groups")
+      .columns.is-multiline
+        .column
+          {{task_group.title}}
+
+        .column.is-full.has-background-light(v-for="task in task_group.tasks")
+          {{task.title}}
+
+    .column.has-background-secondary
+      %a(v-on:click="openNewTaskGroupForm()" v-show="!showNewTaskGroupForm")
+        + Add another list
+
+      .box(v-show="showNewTaskGroupForm")
+        .field
+          .control
+            %input.input.is-primary(type="text" v-model="newTaskGroupTitle")
+        %a.button.is-primary(v-on:click="createTaskGroup()")
+          Add List
+        %a.button(v-on:click="closeNewTaskGroupForm()")
+          Cancel

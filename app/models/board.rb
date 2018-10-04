@@ -8,6 +8,8 @@ class Board < ApplicationRecord
 
   after_create :create_default_task_groups
 
+  scope :recently_updated, -> { order('updated_at DESC') }
+
   private
 
   def create_default_task_groups
