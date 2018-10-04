@@ -77,3 +77,105 @@ describe Task, 'validations', type: :model do
     end
   end
 end
+
+describe Task, 'move_to_position' do
+  let!(:board) { FactoryBot.create(:board) }
+  let!(:task_group1) { FactoryBot.create(:task_group, board: board) }
+  let!(:task_group2) { FactoryBot.create(:task_group, board: board) }
+  let!(:task1_1) { FactoryBot.create(:task, task_group: task_group1) }
+  let!(:task1_2) { FactoryBot.create(:task, task_group: task_group1) }
+  let!(:task1_3) { FactoryBot.create(:task, task_group: task_group1) }
+  let!(:task2_1) { FactoryBot.create(:task, task_group: task_group2) }
+  let!(:task2_2) { FactoryBot.create(:task, task_group: task_group2) }
+  let!(:task2_3) { FactoryBot.create(:task, task_group: task_group2) }
+
+  before(:each) do
+    task_group1.reload
+    task_group2.reload
+  end
+
+  it 'should have certain tasks in the task groups' do
+    expect(task_group1.tasks.count).to eql(3)
+    expect(task_group2.tasks.count).to eql(3)
+  end
+
+  describe 'when moved in the same task group' do
+    before(:each) do
+      expect(task1_3.move_to_position(task_group1.id, 1)).to be(true)
+      task_group1.reload
+      task_group2.reload
+    end
+
+    it 'should not change the size of the task groups' do
+      expect(task_group1.tasks.count).to eql(3)
+      expect(task_group2.tasks.count).to eql(3)
+    end
+
+    it 'should change the order of the tasks' do
+      expect(task_group1.tasks[0]).to eql(task1_3)
+      expect(task_group1.tasks[1]).to eql(task1_1)
+      expect(task_group1.tasks[2]).to eql(task1_2)
+    end
+  end
+
+  describe 'when moved to a different task group' do
+    before(:each) do
+      expect(task1_1.move_to_position(task_group2.id, 1)).to be(true)
+      task_group1.reload
+      task_group2.reload
+    end
+
+    it 'should change the size of the task groups' do
+      expect(task_group1.tasks.count).to eql(2)
+      expect(task_group2.tasks.count).to eql(4)
+    end
+
+    it 'should remove the task from the source task group' do
+      expect(task_group1.tasks.pluck(:id)).not_to include(task1_1.id)
+    end
+
+    it 'should add the task to the target task group' do
+      expect(task_group2.tasks.pluck(:id)).to include(task1_1.id)
+    end
+
+    it 'should change the order of the tasks' do
+      task_group1.tasks.each_with_index do |task, i|
+        expect(task.position).to eql(i + 1)
+      end
+      task_group2.tasks.each_with_index do |task, i|
+        expect(task.position).to eql(i + 1)
+      end
+    end
+  end
+
+  describe 'when moved to a non-existent task group' do
+    it 'should return false' do
+      expect(task1_1.move_to_position(-1, 1)).to be(false)
+    end
+
+    it 'should set the error message' do
+      task1_1.move_to_position(-1, 1)
+      expect(task1_1.errors[:task_group_id]).to(
+        include(I18n.t('task_groups.not_found'))
+      )
+    end
+  end
+
+  describe 'when moved to a task group in different board' do
+    let!(:another_board) { FactoryBot.create(:board) }
+    let!(:another_task_group) do
+      FactoryBot.create(:task_group, board: another_board)
+    end
+
+    it 'should return false' do
+      expect(task1_1.move_to_position(another_task_group.id, 1)).to be(false)
+    end
+
+    it 'should set the error message' do
+      task1_1.move_to_position(another_task_group.id, 1)
+      expect(task1_1.errors[:task_group_id]).to(
+        include(I18n.t('task_groups.does_not_belong_to_same_board'))
+      )
+    end
+  end
+end

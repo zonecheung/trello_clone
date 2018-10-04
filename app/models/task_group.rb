@@ -6,4 +6,6 @@ class TaskGroup < ApplicationRecord
 
   validates :board_id, presence: true
   validates :title, presence: true, length: { maximum: 255 }
+
+  default_scope { order('position') }
 end

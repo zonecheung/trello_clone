@@ -16,7 +16,7 @@ describe Api::BoardsController, 'index', type: :controller do
   end
 end
 
-describe Api::BoardsController, 'show' do
+describe Api::BoardsController, 'show', type: :controller do
   let(:board) { FactoryBot.create(:board) }
 
   it 'should return the board with the task groups' do
@@ -42,7 +42,7 @@ describe Api::BoardsController, 'show' do
   end
 end
 
-describe Api::BoardsController, 'create' do
+describe Api::BoardsController, 'create', type: :controller do
   let(:board_attributes) { FactoryBot.attributes_for(:board) }
 
   it 'should add a new board' do
@@ -87,7 +87,7 @@ describe Api::BoardsController, 'create' do
   end
 end
 
-describe Api::BoardsController, 'update' do
+describe Api::BoardsController, 'update', type: :controller do
   let(:board) { FactoryBot.create(:board) }
   let(:board_attributes) { board.attributes }
 
@@ -136,7 +136,7 @@ describe Api::BoardsController, 'update' do
   end
 end
 
-describe Api::BoardsController, 'destroy' do
+describe Api::BoardsController, 'destroy', type: :controller do
   let!(:board) { FactoryBot.create(:board) }
 
   it 'should remove the board from database' do

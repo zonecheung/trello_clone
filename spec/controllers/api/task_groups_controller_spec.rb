@@ -2,6 +2,7 @@ require 'rails_helper'
 
 describe Api::TaskGroupsController, 'index', type: :controller do
   let!(:board) { FactoryBot.create(:board) }
+  let!(:task_group) { FactoryBot.create(:task_group, board: board) }
 
   it 'should have task groups in the board' do
     expect(board.task_groups.count).not_to eql(0)
@@ -18,7 +19,7 @@ describe Api::TaskGroupsController, 'index', type: :controller do
   end
 end
 
-describe Api::TaskGroupsController, 'show' do
+describe Api::TaskGroupsController, 'show', type: :controller do
   let(:task_group) { FactoryBot.create(:task_group) }
   let(:board) { task_group.board }
 
@@ -34,7 +35,7 @@ describe Api::TaskGroupsController, 'show' do
   end
 end
 
-describe Api::TaskGroupsController, 'create' do
+describe Api::TaskGroupsController, 'create', type: :controller do
   let!(:board) { FactoryBot.create(:board) }
   let(:task_group_attributes) do
     FactoryBot.attributes_for(:task_group, board_id: board.id)
@@ -69,7 +70,7 @@ describe Api::TaskGroupsController, 'create' do
       task_group_attributes[:title] = ''
     end
 
-    it 'should not add a new board' do
+    it 'should not add a new task group' do
       expect do
         post :create,
              params: { board_id: board.id, task_group: task_group_attributes },
@@ -95,7 +96,7 @@ describe Api::TaskGroupsController, 'create' do
   end
 end
 
-describe Api::TaskGroupsController, 'update' do
+describe Api::TaskGroupsController, 'update', type: :controller do
   let(:board) { FactoryBot.create(:board) }
   let(:task_group) { FactoryBot.create(:task_group, board: board) }
   let(:task_group_attributes) { task_group.attributes }
@@ -104,7 +105,7 @@ describe Api::TaskGroupsController, 'update' do
     task_group_attributes['title'] = task_group_attributes['title'] + ' updated'
   end
 
-  it 'should not add a new board' do
+  it 'should not add a new task group' do
     expect do
       patch :update,
             params: {
@@ -165,11 +166,11 @@ describe Api::TaskGroupsController, 'update' do
   end
 end
 
-describe Api::TaskGroupsController, 'destroy' do
+describe Api::TaskGroupsController, 'destroy', type: :controller do
   let(:board) { FactoryBot.create(:board) }
   let!(:task_group) { FactoryBot.create(:task_group, board: board) }
 
-  it 'should remove the board from database' do
+  it 'should remove the task group from database' do
     expect do
       delete :destroy,
              params: { board_id: board.id, id: task_group.id }, format: :json
@@ -213,6 +214,76 @@ describe Api::TaskGroupsController, 'destroy' do
     it 'should return status :unprocessable_entity' do
       delete :destroy,
              params: { board_id: board.id, id: task_group.id }, format: :json
+      expect(response).to have_http_status(:unprocessable_entity)
+    end
+  end
+end
+
+describe Api::TaskGroupsController, 'move_to_position', type: :controller do
+  # NOTE: We create 3 default task_groups for the board,
+  # =>    but don't want to rely on them in these tests.
+  let!(:board) { FactoryBot.create(:board) }
+  let!(:task_group1) { FactoryBot.create(:task_group, board: board) }
+  let!(:task_group2) { FactoryBot.create(:task_group, board: board) }
+  let!(:task_group3) { FactoryBot.create(:task_group, board: board) }
+
+  it 'should have a position in the task group' do
+    expect(task_group3.position).to be_a_kind_of(Integer)
+    expect(task_group3.position).to be > 1
+  end
+
+  it 'should not change the task group count' do
+    expect do
+      patch :move_to_position,
+            params: { board_id: board.id, id: task_group3.id, position: 1 },
+            format: :json
+    end.not_to(change { TaskGroup.count })
+  end
+
+  it 'should change the position of the task group' do
+    patch :move_to_position,
+          params: { board_id: board.id, id: task_group3.id, position: 1 },
+          format: :json
+    task_group3.reload
+    expect(task_group3.position).to eql(1)
+  end
+
+  it 'should have sorted the positions of task groups after moving' do
+    patch :move_to_position,
+          params: { board_id: board.id, id: task_group3.id, position: 1 },
+          format: :json
+    board.reload
+    expect(board.task_groups.first).to eql(task_group3)
+    board.task_groups.each_with_index do |task_group, i|
+      expect(task_group.position).to eql(i + 1)
+    end
+  end
+
+  describe 'when there\'s an error moving the position' do
+    let!(:task_group4) { FactoryBot.build_stubbed(:task_group, board: board) }
+
+    before(:each) do
+      allow(task_group4).to receive(:insert_at).and_return(false)
+      allow(task_group4.errors).to(
+        receive(:full_messages).and_return(%w[foo bar])
+      )
+      allow(TaskGroup).to(
+        receive(:find).with(task_group4.id.to_s).and_return(task_group4)
+      )
+    end
+
+    it 'should return the errors in json' do
+      patch :move_to_position,
+            params: { board_id: board.id, id: task_group4.id, position: 1 },
+            format: :json
+      json = JSON.parse(response.body)
+      expect(json['errors']).not_to be_blank
+    end
+
+    it 'should return status :unprocessable_entity' do
+      patch :move_to_position,
+            params: { board_id: board.id, id: task_group4.id, position: 1 },
+            format: :json
       expect(response).to have_http_status(:unprocessable_entity)
     end
   end

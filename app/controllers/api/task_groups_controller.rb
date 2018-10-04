@@ -1,7 +1,8 @@
 module Api
   class TaskGroupsController < ApplicationController
     before_action :set_board
-    before_action :set_task_group, only: %i[show update destroy]
+    before_action :set_task_group,
+                  only: %i[show update destroy move_to_position]
 
     # GET /api/task_groups.json
     def index
@@ -39,6 +40,16 @@ module Api
     def destroy
       if @task_group.destroy
         head :no_content
+      else
+        render json: { errors: @task_group.errors.full_messages },
+               status: :unprocessable_entity
+      end
+    end
+
+    # PATCH /api/task_groups/1/move_to_position.json
+    def move_to_position
+      if @task_group.insert_at(params[:position].to_i)
+        render json: @task_group
       else
         render json: { errors: @task_group.errors.full_messages },
                status: :unprocessable_entity

@@ -31,6 +31,8 @@
 
 en:
   task_groups:
-    doing: 'Doing'
-    done: 'Done'
-    todo: 'To Do'
+    doing: Doing
+    done: Done
+    todo: To Do
+    does_not_belong_to_same_board: "doesn't belong to the same board"
+    not_found: not found
