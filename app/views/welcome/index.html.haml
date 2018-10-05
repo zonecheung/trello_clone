@@ -4,8 +4,8 @@
   %nav.navbar(role="navigation" aria-label="main navigation")
     .navbar-brand
       {{board.title}}
-  .columns
-    .column.has-background-grey-light(v-for="task_group in board.task_groups")
+  .board-container
+    .box.task-group-container.has-background-grey-light(v-for="task_group in board.task_groups")
       .columns.is-multiline
         .column
           {{task_group.title}}
@@ -13,7 +13,7 @@
         .column.is-full.has-background-light(v-for="task in task_group.tasks")
           {{task.title}}
 
-    .column.has-background-secondary
+    .box.task-group-container.has-background-secondary
       %a(v-on:click="openNewTaskGroupForm()" v-show="!showNewTaskGroupForm")
         + Add another list
 

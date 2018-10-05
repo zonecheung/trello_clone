@@ -48,7 +48,8 @@ module Api
 
     # PATCH /api/task_groups/1/move_to_position.json
     def move_to_position
-      if @task_group.insert_at(params[:position].to_i)
+      if @task_group.move_to_position(params[:board_id].to_i,
+                                      params[:position].to_i)
         render json: @task_group
       else
         render json: { errors: @task_group.errors.full_messages },

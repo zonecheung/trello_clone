@@ -8,29 +8,33 @@ class Task < ApplicationRecord
 
   default_scope { order('position') }
 
-  def move_to_position(target_task_group_id, pos)
-    move_to_task_group_if_applicable(target_task_group_id) &&
-      self.insert_at(pos)
+  delegate :board,
+           :board_id, to: :task_group
+
+  def move_to_position(target_board_id, target_task_group_id, pos)
+    move_to_task_group_if_applicable(target_board_id, target_task_group_id) &&
+      self.insert_at(pos) != false # nil is returned when there's only one item.
   end
 
   private
 
-  def move_to_task_group_if_applicable(target_task_group_id)
-    return true if target_task_group_id == self.task_group_id
-    return false unless valid_as_target?(target_task_group_id)
+  def move_to_task_group_if_applicable(target_board_id, target_task_group_id)
+    return true if target_board_id == self.board_id &&
+                   target_task_group_id == self.task_group_id
+    return false unless valid_as_target?(target_board_id,
+                                         target_task_group_id)
 
     self.remove_from_list &&
       self.update_attributes(task_group_id: target_task_group_id)
   end
 
-  def valid_as_target?(target_task_group_id)
-    target_task_group = TaskGroup.find_by_id(target_task_group_id)
+  def valid_as_target?(target_board_id, target_task_group_id)
+    target_board = Board.find_by_id(target_board_id)
+    target_task_group = target_board.task_groups
+                                    .find_by_id(target_task_group_id)
+
     if target_task_group.nil?
-      self.errors.add(:task_group_id,
-                      I18n.t('task_groups.not_found'))
-    elsif target_task_group.board_id != self.task_group.board_id
-      self.errors.add(:task_group_id,
-                      I18n.t('task_groups.does_not_belong_to_same_board'))
+      self.errors.add(:task_group_id, I18n.t('shared.not_found'))
     end
     self.errors.blank?
   end

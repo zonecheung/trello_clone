@@ -263,7 +263,7 @@ describe Api::TaskGroupsController, 'move_to_position', type: :controller do
     let!(:task_group4) { FactoryBot.build_stubbed(:task_group, board: board) }
 
     before(:each) do
-      allow(task_group4).to receive(:insert_at).and_return(false)
+      allow(task_group4).to receive(:move_to_position).and_return(false)
       allow(task_group4.errors).to(
         receive(:full_messages).and_return(%w[foo bar])
       )

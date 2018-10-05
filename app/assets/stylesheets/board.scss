@@ -1,0 +1,11 @@
+.board-container {
+  overflow-x: auto;
+  white-space: nowrap;
+  margin: 0 0.25rem;
+
+  .task-group-container {
+    width: 300px;
+    margin: 0 0.25rem;
+    display: inline-block;
+  }
+}

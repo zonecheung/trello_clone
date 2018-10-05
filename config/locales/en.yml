@@ -30,9 +30,12 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
+  boards:
+
   task_groups:
     doing: Doing
     done: Done
     todo: To Do
     does_not_belong_to_same_board: "doesn't belong to the same board"
+  shared:
     not_found: not found

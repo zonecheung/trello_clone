@@ -48,7 +48,8 @@ module Api
 
     # PATCH /api/tasks/1/move_to_position.json
     def move_to_position
-      if @task.move_to_position(params[:task_group_id].to_i,
+      if @task.move_to_position(params[:board_id].to_i,
+                                params[:task_group_id].to_i,
                                 params[:position].to_i)
         render json: @task
       else
