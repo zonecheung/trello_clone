@@ -30,12 +30,15 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  boards:
-
   task_groups:
+    add: Add another list
     doing: Doing
     done: Done
     todo: To Do
     does_not_belong_to_same_board: "doesn't belong to the same board"
+    move: Move List
+    delete: Delete List
   shared:
     not_found: not found
+    board: Board
+    position: Position

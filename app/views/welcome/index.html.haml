@@ -1,21 +1,18 @@
 = javascript_pack_tag 'board_vue'
 
+= render partial: 'task_group'
+= render partial: 'task'
+
 #board-vue
   %nav.navbar(role="navigation" aria-label="main navigation")
     .navbar-brand
       {{board.title}}
   .board-container
-    .box.task-group-container.has-background-grey-light(v-for="task_group in board.task_groups")
-      .columns.is-multiline
-        .column
-          {{task_group.title}}
-
-        .column.is-full.has-background-light(v-for="task in task_group.tasks")
-          {{task.title}}
+    %task-group.task-group-container(:task_group="task_group" v-for="task_group in board.task_groups" :key="task_group.id")
 
     .box.task-group-container.has-background-secondary
       %a(v-on:click="openNewTaskGroupForm()" v-show="!showNewTaskGroupForm")
-        + Add another list
+        = '+ ' + I18n.t('task_groups.add')
 
       .box(v-show="showNewTaskGroupForm")
         .field

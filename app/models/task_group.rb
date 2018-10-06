@@ -1,5 +1,5 @@
 class TaskGroup < ApplicationRecord
-  belongs_to :board
+  belongs_to :board, touch: true
   has_many :tasks, dependent: :destroy
 
   acts_as_list scope: %i[board_id]

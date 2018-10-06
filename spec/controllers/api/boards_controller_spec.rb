@@ -7,7 +7,11 @@ describe Api::BoardsController, 'index', type: :controller do
 
   it 'should return all boards' do
     get :index, format: :json
-    expect(response.body).to eql([board1, board2, board3].to_json)
+    json = JSON.parse(response.body)
+    expect(json.size).to eql(3)
+    expect(json[0]['id']).to eql(board3.id)
+    expect(json[1]['id']).to eql(board2.id)
+    expect(json[2]['id']).to eql(board1.id)
   end
 
   it 'should be successful' do
@@ -182,6 +186,14 @@ describe Api::BoardsController, 'latest', type: :controller do
   let!(:board1) { FactoryBot.create(:board, updated_at: 1.week.ago) }
   let!(:board2) { FactoryBot.create(:board, updated_at: 1.day.ago) }
   let!(:board3) { FactoryBot.create(:board, updated_at: 1.month.ago) }
+
+  before(:each) do
+    # Manually set the updated_at because the records are 'touched' in
+    # after_create callbacks.
+    board1.update_attributes!(updated_at: 1.week.ago)
+    board2.update_attributes!(updated_at: 1.day.ago)
+    board3.update_attributes!(updated_at: 1.month.ago)
+  end
 
   it 'should return the board with the task groups' do
     get :latest, format: :json

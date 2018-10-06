@@ -1,0 +1,48 @@
+%script#task-group-vue-component-template(type="text/x-template")
+  .box.has-background-grey-light
+    .level
+      .level-left
+        .level-item
+          %a(v-on:click="parent.editing_task_group_id = task_group.id" v-show="parent.editing_task_group_id != task_group.id")
+            {{task_group.title}}
+          %textarea.textarea(type="text" v-model="task_group.title" v-show="parent.editing_task_group_id == task_group.id" v-on:blur="update(task_group)")
+      .level-right
+        .level-item
+          .dropdown.is-hoverable
+            .dropdown-trigger
+              %button.button.is-text(aria-haspopup="true" aria-controls="dropdown-menu" v-on:click="parent.active_menu_task_group_id = task_group.id")
+                %span &hellip;
+            .dropdown-menu(role="menu")
+              .dropdown-content
+                %a.dropdown-item(v-on:click="parent.active_modal_task_group_id = task_group.id")
+                  = "#{I18n.t('task_groups.move')}&hellip;".html_safe
+                  {{parent.active_modal_task_group_id}}
+                %a.dropdown-item(v-on:click="destroy(task_group)")
+                  = I18n.t('task_groups.delete')
+          .modal(:class="parent.active_modal_task_group_id == task_group.id ? \"is-active\" : null")
+            .modal-background(v-on:click="parent.active_modal_task_group_id = null")
+            .modal-card
+              %header.modal-card-head
+                %p.modal-card-title= I18n.t('task_groups.move')
+                %button.delete(v-on:click="parent.active_modal_task_group_id = null" aria-label="close")
+              %section.modal-card-body
+                .field
+                  %label.label= I18n.t('shared.board')
+                  .control
+                    .select
+                      %select
+                        %option(v-for="")
+                .field
+                  %label.label= I18n.t("shared.position")
+                  .control
+                    .select
+                      %select
+                        %option(v-for="")
+
+              %footer.modal-card-foot
+                %button.button.is-success
+                  = I18n.t('task_groups.move')
+            %button.modal-close.is-large(v-on:click="parent.active_modal_task_group_id = null" aria-label="close")
+
+
+    %task(:task="task" v-for="task in task_group.tasks" :key="task.id")

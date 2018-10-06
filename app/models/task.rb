@@ -1,5 +1,5 @@
 class Task < ApplicationRecord
-  belongs_to :task_group
+  belongs_to :task_group, touch: true
 
   acts_as_list scope: %i[task_group_id]
 

@@ -1,11 +1,11 @@
 module Api
   class BoardsController < ApplicationController
     before_action :set_board, only: %i[update destroy]
-    before_action :set_no_task_groups, only: %i[show latest]
+    before_action :set_no_task_groups, only: %i[index show latest]
 
     # GET /api/boards.json
     def index
-      render json: Board.all
+      @boards = Board.includes(task_groups: :tasks).recently_updated
     end
 
     # GET /api/boards/1.json
