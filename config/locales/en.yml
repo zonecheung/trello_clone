@@ -30,6 +30,11 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
+  boards:
+    board: Board
+    boards: Boards
+    delete: Delete this board
+    new: Create new board
   task_groups:
     add: Add List
     add_another: Add another list
@@ -38,6 +43,7 @@ en:
     doing: Doing
     done: Done
     move: Move List
+    task_group: List
     todo: To Do
   tasks:
     add: Add Card
@@ -45,8 +51,6 @@ en:
     delete: Delete Card
     move: Move Card
   shared:
-    board: Board
     cancel: Cancel
     not_found: not found
     position: Position
-    task_group: List

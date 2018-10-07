@@ -26,14 +26,14 @@
               %button.delete(v-on:click="parent.active_modal_task_id = null" aria-label="close")
             %section.modal-card-body
               .field
-                %label.label= I18n.t('shared.board')
+                %label.label= I18n.t('boards.board')
                 .control
                   .select
                     %select(v-model="target_board_id" v-on:change="changeTargetBoard()")
                       %option(v-for="move_to_board in parent.parent.boards" :key="move_to_board.id" :value="move_to_board.id")
                         {{move_to_board.title}}
               .field
-                %label.label= I18n.t('shared.task_group')
+                %label.label= I18n.t('task_groups.task_group')
                 .control
                   .select
                     %select(v-model="target_task_group_id" v-on:change="target_position = 1")

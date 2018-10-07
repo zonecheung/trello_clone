@@ -27,7 +27,7 @@
                 %button.delete(v-on:click="parent.active_modal_task_group_id = null" aria-label="close")
               %section.modal-card-body
                 .field
-                  %label.label= I18n.t('shared.board')
+                  %label.label= I18n.t('boards.board')
                   .control
                     .select
                       %select(v-model="target_board_id" v-on:change="target_position = 1")
