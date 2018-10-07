@@ -31,14 +31,22 @@
 
 en:
   task_groups:
-    add: Add another list
+    add: Add List
+    add_another: Add another list
+    delete: Delete List
+    does_not_belong_to_same_board: "doesn't belong to the same board"
     doing: Doing
     done: Done
-    todo: To Do
-    does_not_belong_to_same_board: "doesn't belong to the same board"
     move: Move List
-    delete: Delete List
+    todo: To Do
+  tasks:
+    add: Add Card
+    add_another: Add another card
+    delete: Delete Card
+    move: Move Card
   shared:
-    not_found: not found
     board: Board
+    cancel: Cancel
+    not_found: not found
     position: Position
+    task_group: List

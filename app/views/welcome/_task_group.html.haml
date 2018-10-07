@@ -5,20 +5,20 @@
         .level-item
           %a(v-on:click="parent.editing_task_group_id = task_group.id" v-show="parent.editing_task_group_id != task_group.id")
             {{task_group.title}}
-          %textarea.textarea(type="text" v-model="task_group.title" v-show="parent.editing_task_group_id == task_group.id" v-on:blur="update(task_group)")
+          %textarea.textarea(type="text" v-model="task_group.title" v-show="parent.editing_task_group_id == task_group.id" v-on:blur="update()")
       .level-right
         .level-item
           .dropdown.is-hoverable
             .dropdown-trigger
-              %button.button.is-text(aria-haspopup="true" aria-controls="dropdown-menu" v-on:click="parent.active_menu_task_group_id = task_group.id")
+              %button.button.is-text(aria-haspopup="true" aria-controls="dropdown-menu")
                 %span &hellip;
             .dropdown-menu(role="menu")
               .dropdown-content
-                %a.dropdown-item(v-on:click="parent.active_modal_task_group_id = task_group.id")
+                %a.dropdown-item(v-on:click="showMoveModal()")
                   = "#{I18n.t('task_groups.move')}&hellip;".html_safe
-                  {{parent.active_modal_task_group_id}}
-                %a.dropdown-item(v-on:click="destroy(task_group)")
+                %a.dropdown-item(v-on:click="destroy()")
                   = I18n.t('task_groups.delete')
+
           .modal(:class="parent.active_modal_task_group_id == task_group.id ? \"is-active\" : null")
             .modal-background(v-on:click="parent.active_modal_task_group_id = null")
             .modal-card
@@ -30,19 +30,32 @@
                   %label.label= I18n.t('shared.board')
                   .control
                     .select
-                      %select
-                        %option(v-for="")
+                      %select(v-model="target_board_id" v-on:change="target_position = 1")
+                        %option(v-for="move_to_board in parent.boards" :key="move_to_board.id" :value="move_to_board.id")
+                          {{move_to_board.title}}
                 .field
                   %label.label= I18n.t("shared.position")
                   .control
                     .select
-                      %select
-                        %option(v-for="")
+                      %select(v-model="target_position")
+                        %option(v-for="position in taskGroupPositions" :value="position")
+                          {{position}}
 
               %footer.modal-card-foot
-                %button.button.is-success
+                %button.button.is-success(v-on:click="move()")
                   = I18n.t('task_groups.move')
             %button.modal-close.is-large(v-on:click="parent.active_modal_task_group_id = null" aria-label="close")
 
-
     %task(:task="task" v-for="task in task_group.tasks" :key="task.id")
+    .content(v-show="!show_new_task_form")
+      %a(v-on:click="show_new_task_form = true" v-show="!show_new_task_form")
+        = '+ ' + I18n.t('tasks.add_another')
+
+    .content(v-show="show_new_task_form")
+      .field
+        .control
+          %input.input.is-primary(type="text" v-model="new_task.title")
+      %a.button.is-primary(v-on:click="createTask()")
+        = I18n.t('tasks.add')
+      %a.button(v-on:click="closeTaskForm()")
+        = I18n.t('shared.cancel')

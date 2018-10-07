@@ -278,6 +278,7 @@ describe Api::TasksController, 'move_to_position', type: :controller do
       patch :move_to_position,
             params: {
               board_id: board.id, task_group_id: task_group.id, id: task3.id,
+              target_board_id: board.id, target_task_group_id: task_group.id,
               position: 1
             },
             format: :json
@@ -288,6 +289,7 @@ describe Api::TasksController, 'move_to_position', type: :controller do
     patch :move_to_position,
           params: {
             board_id: board.id, task_group_id: task_group.id, id: task3.id,
+            target_board_id: board.id, target_task_group_id: task_group.id,
             position: 1
           },
           format: :json
@@ -299,6 +301,7 @@ describe Api::TasksController, 'move_to_position', type: :controller do
     patch :move_to_position,
           params: {
             board_id: board.id, task_group_id: task_group.id, id: task3.id,
+            target_board_id: board.id, target_task_group_id: task_group.id,
             position: 1
           },
           format: :json
@@ -326,6 +329,7 @@ describe Api::TasksController, 'move_to_position', type: :controller do
       patch :move_to_position,
             params: {
               board_id: board.id, task_group_id: task_group.id, id: task4.id,
+              target_board_id: board.id, target_task_group_id: task_group.id,
               position: 1
             },
             format: :json
@@ -337,6 +341,7 @@ describe Api::TasksController, 'move_to_position', type: :controller do
       patch :move_to_position,
             params: {
               board_id: board.id, task_group_id: task_group.id, id: task4.id,
+              target_board_id: board.id, target_task_group_id: task_group.id,
               position: 1
             },
             format: :json

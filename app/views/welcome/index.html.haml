@@ -3,7 +3,7 @@
 = render partial: 'task_group'
 = render partial: 'task'
 
-#board-vue
+#trello-clone-vue
   %nav.navbar(role="navigation" aria-label="main navigation")
     .navbar-brand
       {{board.title}}
@@ -11,14 +11,14 @@
     %task-group.task-group-container(:task_group="task_group" v-for="task_group in board.task_groups" :key="task_group.id")
 
     .box.task-group-container.has-background-secondary
-      %a(v-on:click="openNewTaskGroupForm()" v-show="!showNewTaskGroupForm")
-        = '+ ' + I18n.t('task_groups.add')
+      %a(v-on:click="show_new_task_group_form = true" v-show="!show_new_task_group_form")
+        = '+ ' + I18n.t('task_groups.add_another')
 
-      .box(v-show="showNewTaskGroupForm")
+      .box(v-show="show_new_task_group_form")
         .field
           .control
-            %input.input.is-primary(type="text" v-model="newTaskGroupTitle")
+            %input.input.is-primary(type="text" v-model="new_task_group.title")
         %a.button.is-primary(v-on:click="createTaskGroup()")
-          Add List
-        %a.button(v-on:click="closeNewTaskGroupForm()")
-          Cancel
+          = I18n.t('task_groups.add')
+        %a.button(v-on:click="closeTaskGroupForm()")
+          = I18n.t('shared.cancel')

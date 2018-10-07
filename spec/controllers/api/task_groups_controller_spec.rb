@@ -235,14 +235,16 @@ describe Api::TaskGroupsController, 'move_to_position', type: :controller do
   it 'should not change the task group count' do
     expect do
       patch :move_to_position,
-            params: { board_id: board.id, id: task_group3.id, position: 1 },
+            params: { board_id: board.id, id: task_group3.id,
+                      target_board_id: board.id, position: 1 },
             format: :json
     end.not_to(change { TaskGroup.count })
   end
 
   it 'should change the position of the task group' do
     patch :move_to_position,
-          params: { board_id: board.id, id: task_group3.id, position: 1 },
+          params: { board_id: board.id, id: task_group3.id,
+                    target_board_id: board.id, position: 1 },
           format: :json
     task_group3.reload
     expect(task_group3.position).to eql(1)
@@ -250,7 +252,8 @@ describe Api::TaskGroupsController, 'move_to_position', type: :controller do
 
   it 'should have sorted the positions of task groups after moving' do
     patch :move_to_position,
-          params: { board_id: board.id, id: task_group3.id, position: 1 },
+          params: { board_id: board.id, id: task_group3.id,
+                    target_board_id: board.id, position: 1 },
           format: :json
     board.reload
     expect(board.task_groups.first).to eql(task_group3)
@@ -274,7 +277,8 @@ describe Api::TaskGroupsController, 'move_to_position', type: :controller do
 
     it 'should return the errors in json' do
       patch :move_to_position,
-            params: { board_id: board.id, id: task_group4.id, position: 1 },
+            params: { board_id: board.id, id: task_group4.id,
+                      target_board_id: board.id, position: 1 },
             format: :json
       json = JSON.parse(response.body)
       expect(json['errors']).not_to be_blank
@@ -282,7 +286,8 @@ describe Api::TaskGroupsController, 'move_to_position', type: :controller do
 
     it 'should return status :unprocessable_entity' do
       patch :move_to_position,
-            params: { board_id: board.id, id: task_group4.id, position: 1 },
+            params: { board_id: board.id, id: task_group4.id,
+                      target_board_id: board.id, position: 1 },
             format: :json
       expect(response).to have_http_status(:unprocessable_entity)
     end
