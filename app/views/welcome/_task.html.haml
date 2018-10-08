@@ -4,7 +4,7 @@
       .level-item
         %a(v-on:click="parent.editing_task_id = task.id" v-show="parent.editing_task_id != task.id")
           {{task.title}}
-        %textarea.textarea(type="text" v-model="task.title" v-show="parent.editing_task_id == task.id" v-on:blur="update()")
+        %textarea.textarea(v-model="task.title" v-show="parent.editing_task_id == task.id" v-on:blur="update()")
     .level-right
       .level-item
         .dropdown.is-hoverable

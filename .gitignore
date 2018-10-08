@@ -39,3 +39,5 @@ config/database.yml
 /node_modules
 yarn-debug.log*
 .yarn-integrity
+
+/app/assets/stylesheets/.sass-cache/*

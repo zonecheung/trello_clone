@@ -10,6 +10,11 @@ export default
     boards: []
     board: { title: '', task_groups: [] }
 
+    new_board: { title: '' }
+
+    creating: false
+    editing: false
+
     active_modal_task_group_id: null
     editing_task_group_id: null
 
@@ -25,11 +30,50 @@ export default
       .then (res) ->
         that.boards = res.data
         pos = that.boards.findIndex (b) -> b.id == that.board_id
-        that.board = that.boards[pos]
-        that.new_task_group.board_id = that.board_id
+        if pos >= 0
+          that.board = that.boards[pos]
+          that.new_task_group.board_id = that.board_id
       .catch @commonAxiosErrorHandler
 
   methods:
+    update: ->
+      unless @board.title.trim() == ''
+        that = this
+        axios.patch(
+          "/api/boards/#{@board.id}",
+          board:
+            title: @board.title
+        )
+          .then (res) ->
+            that.editing = false
+          .catch @commonAxiosErrorHandler
+
+    destroy: ->
+      if confirm('Are you sure you want to delete this board?')
+        that = this
+        axios.delete("/api/boards/#{@board.id}")
+          .then (res) ->
+            window.location.href = '/?board_id=0'
+          .catch @commonAxiosErrorHandler
+
+    create: ->
+      unless @new_board.title.trim() == ''
+        that = this
+        axios.post(
+          "/api/boards",
+          board:
+            title: @new_board.title
+        )
+          .then (res) ->
+            that.creating = false
+            window.location.href = "/?board_id=#{res.data.id}"
+          .catch @commonAxiosErrorHandler
+
+    redirectTo: (board_id) ->
+      # NOTE: Ideally we can do this with :href in the link, but somehow it
+      #       didn't re-initialize Vue and caused blank page.
+      window.location.href = "/?board_id=#{board_id}"
+
     commonAxiosErrorHandler: (err) ->
       console.log(err)
       alert(err)
@@ -54,5 +98,3 @@ export default
     closeTaskGroupForm: ->
       @new_task_group.title = ''
       @show_new_task_group_form = false
-
-

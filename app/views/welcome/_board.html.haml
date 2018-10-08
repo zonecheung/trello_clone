@@ -10,14 +10,39 @@
                   %button.button(aria-haspopup="true" aria-controls="dropdown-menu")
                     %span= I18n.t('boards.boards')
                 .dropdown-menu(role="menu")
-                  %a.dropdown-item(v-on:click="showCreateModal()")
-                    = "#{I18n.t('boards.new')}&hellip;".html_safe
-                  %a.dropdown-item(v-on:click="destroy()")
-                    = I18n.t('boards.delete')
-          .level-left
+                  .dropdown-content
+                    %a.dropdown-item(v-for="board_item in boards" :key="board_item.id" v-on:click="redirectTo(board_item.id)")
+                      {{board_item.title}}
+                    .dropdown-divider(v-if="boards.length > 0")
+                    %a.dropdown-item(v-on:click="creating = true")
+                      = "#{I18n.t('boards.new')}&hellip;".html_safe
+                    %a.dropdown-item(v-on:click="destroy()" v-if="board.id")
+                      = I18n.t('boards.delete')
+
+            .modal(:class="creating ? \"is-active\" : null")
+              .modal-background(v-on:click="creating = false")
+              .modal-card
+                %header.modal-card-head
+                  %p.modal-card-title= I18n.t('boards.new')
+                  %button.delete(v-on:click="creating = false" aria-label="close")
+                %section.modal-card-body
+                  .field
+                    %label.label= I18n.t('boards.board')
+                    .control
+                      %input.input(type="text" v-model="new_board.title")
+
+                %footer.modal-card-foot
+                  %button.button.is-success(v-on:click="create()")
+                    = I18n.t('boards.new')
+              %button.modal-close.is-large(v-on:click="creating = false" aria-label="close")
+
+          .level-left(v-if="board.id")
             .level-item
-              {{board.title}}
-    .board-container
+              %a(v-on:click="editing = true" v-show="!editing")
+                {{board.title}}
+              %input.input(type="text" v-model="board.title" v-show="editing" v-on:blur="update()")
+
+    .board-container(v-if="board.id")
       %task-group.task-group-container(:task_group="task_group" v-for="task_group in board.task_groups" :key="task_group.id")
 
       .box.task-group-container.has-background-secondary

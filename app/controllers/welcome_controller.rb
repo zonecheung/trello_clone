@@ -11,7 +11,8 @@ class WelcomeController < ApplicationController
   def reload_if_no_param
     return unless params[:board_id].blank? && session[:board_id].blank?
 
+    # NOTE: This is just the quick way to return the last updated board.
     board = Board.recently_updated.first
-    redirect_to root_url(board_id: board.id)
+    redirect_to root_url(board_id: board.try(:id) || 0)
   end
 end
