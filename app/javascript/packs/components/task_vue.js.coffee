@@ -6,12 +6,12 @@ export default
   template: '#task-vue-component-template'
 
   data: ->
-    parent: this.$parent
-    board: this.$parent.board
-    task_group: this.$parent.task_group
+    parent: @$parent
+    board: @$parent.board
+    task_group: @$parent.task_group
 
-    target_board_id: this.$parent.board.id
-    target_task_group_id: this.$parent.task_group.id
+    target_board_id: @$parent.board.id
+    target_task_group_id: @$parent.task_group.id
     target_position: null
 
     editing_task_id: null

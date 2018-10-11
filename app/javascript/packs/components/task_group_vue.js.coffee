@@ -7,10 +7,10 @@ export default
   template: '#task-group-vue-component-template'
 
   data: ->
-    parent: this.$parent
-    board: this.$parent.board
+    parent: @$parent
+    board: @$parent.board
 
-    target_board_id: this.$parent.board.id
+    target_board_id: @$parent.board.id
     target_position: null
 
     active_modal_task_id: null
@@ -91,7 +91,9 @@ export default
         that = this
         axios.post(
           "/api/boards/#{@board.id}/task_groups/#{@task_group.id}/tasks",
-          task: @new_task
+          task:
+            title: @new_task.title
+            task_group_id: @task_group.id
         )
           .then (res) ->
             that.task_group.tasks.push(res.data)

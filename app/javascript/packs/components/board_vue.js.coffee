@@ -53,7 +53,7 @@ export default
         that = this
         axios.delete("/api/boards/#{@board.id}")
           .then (res) ->
-            window.location.href = '/?board_id=0'
+            window.location.assign('/?board_id=0')
           .catch @commonAxiosErrorHandler
 
     create: ->
@@ -66,13 +66,13 @@ export default
         )
           .then (res) ->
             that.creating = false
-            window.location.href = "/?board_id=#{res.data.id}"
+            window.location.assign("/?board_id=#{res.data.id}")
           .catch @commonAxiosErrorHandler
 
     redirectTo: (board_id) ->
       # NOTE: Ideally we can do this with :href in the link, but somehow it
       #       didn't re-initialize Vue and caused blank page.
-      window.location.href = "/?board_id=#{board_id}"
+      window.location.assign("/?board_id=#{board_id}")
 
     commonAxiosErrorHandler: (err) ->
       console.log(err)
@@ -88,7 +88,9 @@ export default
         that = this
         axios.post(
           "/api/boards/#{@board.id}/task_groups",
-          task_group: @new_task_group
+          task_group:
+            title: @new_task_group.title
+            board_id: @board.id
         )
           .then (res) ->
             that.board.task_groups.push(res.data)
