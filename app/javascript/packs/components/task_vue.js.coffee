@@ -8,6 +8,7 @@ export default
   data: ->
     parent: @$parent
     board: @$parent.board
+    boards: @$parent.boards
     task_group: @$parent.task_group
 
     target_board_id: @$parent.board.id
@@ -19,7 +20,7 @@ export default
   computed:
     targetBoard: ->
       pos = @$_task_findBoardIndexById(@target_board_id)
-      @parent.parent.boards[pos]
+      @boards[pos]
 
     targetTaskGroup: ->
       board = @targetBoard
@@ -30,7 +31,7 @@ export default
       board = @targetBoard
       pos = @$_task_findTaskGroupIndexById(board, @target_task_group_id)
       offset = if @target_task_group_id == @task_group.id then 0 else 1
-      @parent.parent.createRange(board.task_groups[pos].tasks.length + offset)
+      @createRange(board.task_groups[pos].tasks.length + offset)
 
   methods:
     update: ->
@@ -45,7 +46,7 @@ export default
           .then (res) ->
             if that.parent.editing_task_id == that.task.id
               that.parent.editing_task_id = null
-          .catch @parent.parent.commonAxiosErrorHandler
+          .catch @commonAxiosErrorHandler
 
     destroy: ->
       if confirm('Are you sure you want to delete this card?')
@@ -56,7 +57,7 @@ export default
         )
           .then (res) ->
             that.$_task_remove(that.task_group, that.task)
-          .catch @parent.parent.commonAxiosErrorHandler
+          .catch @commonAxiosErrorHandler
 
     showMoveModal: ->
       @parent.active_modal_task_id = @task.id
@@ -93,11 +94,17 @@ export default
               else
                 that.$_task_moveToTargetTaskGroup()
               that.parent.active_modal_task_id = null
-            .catch @parent.parent.commonAxiosErrorHandler
+            .catch @commonAxiosErrorHandler
+
+    commonAxiosErrorHandler: (err) ->
+      @parent.commonAxiosErrorHandler(err)
+
+    createRange: (n) ->
+      @parent.createRange(n)
 
     # Private methods.
     $_task_findBoardIndexById: (board_id) ->
-      @parent.parent.boards.findIndex (b) -> b.id == board_id
+      @boards.findIndex (b) -> b.id == board_id
 
     $_task_findTaskGroupIndexById: (board, task_group_id) ->
       board.task_groups.findIndex (tg) -> tg.id == task_group_id

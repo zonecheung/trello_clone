@@ -1,14 +1,10 @@
 import { shallowMount } from '@vue/test-utils'
 import axios from 'axios'
-import Board from '../../../app/javascript/packs/components/board_vue.js'
 import TaskGroup from '../../../app/javascript/packs/components/task_group_vue.js'
 
 jest.mock('axios')
 
 # We're unit testing, remove child components and template.
-Board.components = {}
-Board.template = '<div></div>'
-
 TaskGroup.components = {}
 TaskGroup.template = '<div></div>'
 
@@ -23,23 +19,23 @@ describe 'TaskGroup component', ->
       ] },
     { id: 3, title: 'Board 3', task_groups: [] }
   ]
+  $parent = {
+    boards: boards
+    board: boards[1]
+  }
+
   component = null
   vm = null
-
-  beforeAll ->
-    # NOTE: The board is mounted also.
-    axios.get.mockResolvedValue(data: boards)
 
   beforeEach ->
     component = shallowMount(
       TaskGroup,
       propsData:
         task_group: task_group2
-      parentComponent: Board
+      mocks:
+        $parent
     )
     vm = component.vm
-    vm.board = boards[1]
-    vm.target_board_id = vm.board.id
 
   it 'is a Vue instance', ->
     expect(component.isVueInstance()).toBeTruthy()
@@ -71,7 +67,7 @@ describe 'TaskGroup component', ->
 
       it 'should reset the editing flag', ->
         vm.$nextTick ->
-          vm.task_group.title = 'Blacklist'
+          vm.task_group.title = 'Todo List'
           vm.parent.editing_task_group_id = vm.task_group.id
           vm.update()
           vm.$nextTick ->
@@ -170,10 +166,10 @@ describe 'TaskGroup component', ->
 
           it 'should reset the active modal flag', ->
             vm.$nextTick ->
-              vm.$parent.active_modal_task_group_id = 2
+              vm.parent.active_modal_task_group_id = 2
               vm.move()
               vm.$nextTick ->
-                expect(vm.$parent.active_modal_task_group_id).toEqual(null)
+                expect(vm.parent.active_modal_task_group_id).toEqual(null)
 
       describe 'to another board', ->
         beforeEach ->
@@ -184,7 +180,7 @@ describe 'TaskGroup component', ->
           beforeEach ->
             global.confirm = jest.fn -> true
             # Reset the task_groups in target board.
-            vm.$parent.boards[2].task_groups = []
+            vm.boards[2].task_groups = []
 
           it 'should call axios.patch once', ->
             vm.$nextTick ->
@@ -207,8 +203,8 @@ describe 'TaskGroup component', ->
             vm.$nextTick ->
               vm.move()
               vm.$nextTick ->
-                expect(vm.$parent.boards[2].task_groups.length).toEqual(1)
-                expect(vm.$parent.boards[2].task_groups).toContain(task_group2)
+                expect(vm.boards[2].task_groups.length).toEqual(1)
+                expect(vm.boards[2].task_groups).toContain(task_group2)
 
         describe 'when not confirmed in the dialog', ->
           beforeEach ->

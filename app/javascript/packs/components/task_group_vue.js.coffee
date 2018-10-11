@@ -9,6 +9,7 @@ export default
   data: ->
     parent: @$parent
     board: @$parent.board
+    boards: @$parent.boards
 
     target_board_id: @$parent.board.id
     target_position: null
@@ -28,11 +29,11 @@ export default
   computed:
     targetBoard: ->
       pos = @$_taskGroup_findBoardIndexById(@target_board_id)
-      @parent.boards[pos]
+      @boards[pos]
 
     taskGroupPositions: ->
       offset = if @target_board_id == @board.id then 0 else 1
-      @parent.createRange(@targetBoard.task_groups.length + offset)
+      @createRange(@targetBoard.task_groups.length + offset)
 
   methods:
     update: ->
@@ -46,7 +47,7 @@ export default
           .then (res) ->
             if that.parent.editing_task_group_id == that.task_group.id
               that.parent.editing_task_group_id = null
-          .catch @parent.commonAxiosErrorHandler
+          .catch @commonAxiosErrorHandler
 
     destroy: ->
       if confirm('Are you sure you want to delete this list?')
@@ -54,7 +55,7 @@ export default
         axios.delete("/api/boards/#{@board.id}/task_groups/#{@task_group.id}")
           .then (res) ->
             that.$_taskGroup_remove(that.board, that.task_group)
-          .catch @parent.commonAxiosErrorHandler
+          .catch @commonAxiosErrorHandler
 
     showMoveModal: ->
       @parent.active_modal_task_group_id = @task_group.id
@@ -84,7 +85,7 @@ export default
                 # Move to another board.
                 that.$_taskGroup_moveToTargetBoard()
               that.parent.active_modal_task_group_id = null
-            .catch @parent.commonAxiosErrorHandler
+            .catch @commonAxiosErrorHandler
 
     createTask: ->
       unless @new_task.title.trim() == ''
@@ -98,15 +99,21 @@ export default
           .then (res) ->
             that.task_group.tasks.push(res.data)
             that.closeTaskForm()
-          .catch @parent.commonAxiosErrorHandler
+          .catch @commonAxiosErrorHandler
 
     closeTaskForm: ->
       @show_new_task_form = false
       @new_task.title = ''
 
+    commonAxiosErrorHandler: (err) ->
+      @parent.commonAxiosErrorHandler(err)
+
+    createRange: (n) ->
+      @parent.createRange(n)
+
     # Private methods.
     $_taskGroup_findBoardIndexById: (board_id) ->
-      @parent.boards.findIndex (b) -> b.id == board_id
+      @boards.findIndex (b) -> b.id == board_id
 
     $_taskGroup_findIndex: (board, task_group) ->
       board.task_groups.findIndex (tg) -> tg.id == task_group.id
