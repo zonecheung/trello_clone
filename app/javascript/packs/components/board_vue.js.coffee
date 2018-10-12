@@ -100,3 +100,13 @@ export default
     closeTaskGroupForm: ->
       @new_task_group.title = ''
       @show_new_task_group_form = false
+
+    showInput: ->
+      @editing = true
+      @$nextTick ->
+        @$refs.title.focus()
+
+    showNewTaskGroupForm: ->
+      @show_new_task_group_form = true
+      @$nextTick ->
+        @$refs.new_title.focus()

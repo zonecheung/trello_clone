@@ -1,11 +1,11 @@
 %script#task-group-vue-component-template(type="text/x-template")
-  .box.has-background-grey-light
+  .box.has-background-dark
     .level
       .level-left
-        .level-item
-          %a(v-on:click="parent.editing_task_group_id = task_group.id" v-show="parent.editing_task_group_id != task_group.id")
+        .level-item.task-group-title
+          %a(v-on:click="showInput()" v-show="parent.editing_task_group_id != task_group.id")
             {{task_group.title}}
-          %textarea.textarea(v-model="task_group.title" v-show="parent.editing_task_group_id == task_group.id" v-on:blur="update()")
+          %textarea.textarea(v-model="task_group.title" ref="title" v-show="parent.editing_task_group_id == task_group.id" v-on:blur="update()")
       .level-right
         .level-item
           .dropdown.is-hoverable
@@ -48,13 +48,13 @@
 
     %task(:task="task" v-for="task in task_group.tasks" :key="task.id")
     .content(v-show="!show_new_task_form")
-      %a(v-on:click="show_new_task_form = true" v-show="!show_new_task_form")
+      %a.new-task(v-on:click="showNewTaskForm()" v-show="!show_new_task_form")
         = '+ ' + I18n.t('tasks.add_another')
 
     .content(v-show="show_new_task_form")
       .field
         .control
-          %input.input.is-primary(type="text" v-model="new_task.title")
+          %input.input.is-primary(type="text" ref="new_title" v-model="new_task.title")
       %a.button.is-primary(v-on:click="createTask()")
         = I18n.t('tasks.add')
       %a.button(v-on:click="closeTaskForm()")

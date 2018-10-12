@@ -2,7 +2,7 @@
   %div
     %nav.navbar(role="navigation" aria-label="main navigation")
       .navbar-brand
-        .level
+        .level.navbar-item
           .level-left
             .level-item
               .dropdown.is-hoverable
@@ -38,21 +38,21 @@
 
           .level-left(v-if="board.id")
             .level-item
-              %a(v-on:click="editing = true" v-show="!editing")
+              %a(v-on:click="showInput()" v-show="!editing")
                 {{board.title}}
-              %input.input(type="text" v-model="board.title" v-show="editing" v-on:blur="update()")
+              %input.input(type="text" ref="title" v-model="board.title" v-show="editing" v-on:blur="update()")
 
     .board-container(v-if="board.id")
       %task-group.task-group-container(:task_group="task_group" v-for="task_group in board.task_groups" :key="task_group.id")
 
       .box.task-group-container.has-background-secondary
-        %a(v-on:click="show_new_task_group_form = true" v-show="!show_new_task_group_form")
+        %a(v-on:click="showNewTaskGroupForm()" v-show="!show_new_task_group_form")
           = '+ ' + I18n.t('task_groups.add_another')
 
         .box(v-show="show_new_task_group_form")
           .field
             .control
-              %input.input.is-primary(type="text" v-model="new_task_group.title")
+              %input.input.is-primary(type="text" ref="new_title" v-model="new_task_group.title")
           %a.button.is-primary(v-on:click="createTaskGroup()")
             = I18n.t('task_groups.add')
           %a.button(v-on:click="closeTaskGroupForm()")

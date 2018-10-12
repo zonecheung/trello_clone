@@ -101,9 +101,19 @@ export default
             that.closeTaskForm()
           .catch @commonAxiosErrorHandler
 
+    showNewTaskForm: ->
+      @show_new_task_form = true
+      @$nextTick ->
+        @$refs.new_title.focus()
+
     closeTaskForm: ->
       @show_new_task_form = false
       @new_task.title = ''
+
+    showInput: ->
+      @parent.editing_task_group_id = @task_group.id
+      @$nextTick ->
+        @$refs.title.focus()
 
     commonAxiosErrorHandler: (err) ->
       @parent.commonAxiosErrorHandler(err)

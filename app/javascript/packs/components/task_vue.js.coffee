@@ -96,6 +96,11 @@ export default
               that.parent.active_modal_task_id = null
             .catch @commonAxiosErrorHandler
 
+    showInput: ->
+      @parent.editing_task_id = @task.id
+      @$nextTick ->
+        @$refs.title.focus()
+
     commonAxiosErrorHandler: (err) ->
       @parent.commonAxiosErrorHandler(err)
 
