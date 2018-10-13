@@ -10,7 +10,7 @@ gem 'sqlite3'
 # Use Puma as the app server
 gem 'puma', '~> 3.11'
 # Use SCSS for stylesheets
-gem 'sass-rails', '~> 5.0'
+gem 'sassc-rails', '~> 1.3.0'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 # See https://github.com/rails/execjs#readme for more supported runtimes
@@ -46,6 +46,7 @@ gem 'webpacker', '~> 3.5.5'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  gem 'launchy', '~> 2.4.3'
   gem 'rspec-rails', '~> 3.8.0'
 end
 
@@ -63,9 +64,10 @@ end
 group :test do
   # Adds support for Capybara system testing and selenium driver
   gem 'capybara', '>= 2.15'
-  gem 'selenium-webdriver'
+  gem 'capybara-selenium', '~> 0.0.6'
+  gem 'selenium-webdriver', '~> 3.14.0'
   # Easy installation and use of chromedriver to run system tests with Chrome
-  gem 'chromedriver-helper'
+  gem 'chromedriver-helper', '~> 2.1.0'
 
   gem 'database_cleaner', '~> 1.7.0'
   gem 'factory_bot_rails', '~> 4.11.1'

@@ -15,7 +15,7 @@ Rails.application.config.content_security_policy do |policy|
 #   # Specify URI for violation reports
 #   # policy.report_uri "/csp-violation-report-endpoint"
 
-  if Rails.env.development?
+  if Rails.env.development? || Rails.env.test?
     policy.script_src :self, :https, :unsafe_eval
   else
     policy.script_src :self, :https

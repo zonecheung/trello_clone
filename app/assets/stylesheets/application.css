@@ -14,5 +14,5 @@
  *= require_self
  */
 
-@import 'bulma';
-@import 'solar.bulmaswatch.min';
+@import 'bulma.css';
+@import 'solar.bulmaswatch.min.css';
