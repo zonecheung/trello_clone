@@ -14,3 +14,20 @@
 //= require activestorage
 //= require turbolinks
 //= require_tree .
+
+document.addEventListener('DOMContentLoaded', function() {
+  // HACK: Adjust the height of .board-container if the window is resized.
+  //       Using css height isn't that accurate.
+  function adjustBoardContainer() {
+    var height = window.innerHeight || window.clientHeight;
+    var divs = document.getElementsByClassName('board-container');
+    var nav = document.querySelector('nav[aria-label="main navigation"]');
+
+    for (var i = 0; i < divs.length; i++) {
+      divs[i].style.height = (height - nav.clientHeight - 10) + 'px';
+    }
+  }
+
+  window.addEventListener('resize', adjustBoardContainer);
+  setTimeout(function() { adjustBoardContainer(); }, 1000);
+});

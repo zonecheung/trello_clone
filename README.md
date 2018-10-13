@@ -1,6 +1,6 @@
 # README
 
-This app is developed using Ruby v2.5.1, Rails v5.2.1, Vue.js v2.5.7, and Postgres as database back-end.
+This app is developed using Ruby v2.5.1, Rails v5.2.1, Vue.js v2.5.7, Bulma, and Postgres as database back-end.
 
 Tested working in latest Chrome & Firefox browser.
 
@@ -43,3 +43,7 @@ I've added `apipie-rails` gem to handle the API documentation, please visit `htt
 ## Miscellaneous
 
 The code is written based on certain `rubocop` recommendations, run `rubocop` to verify if there are any offenses.
+
+## Problems
+
+There's probably a transpiling error the first time `yarn test` is run, it might be related to coffeescript compiler. The next run should be OK.
