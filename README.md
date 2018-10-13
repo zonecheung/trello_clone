@@ -1,12 +1,12 @@
 # README
 
-This app is developed using Ruby v2.5.1, Rails v5.2.1, Vue.js v2.5.7, with Postgres as database back-end.
+This app is developed using Ruby v2.5.1, Rails v5.2.1, Vue.js v2.5.7, and Postgres as database back-end.
 
-Tested working in latest Chrome browser.
+Tested working in latest Chrome & Firefox browser.
 
 ## Installation
 
- 1. Clone or download from this repo to a directory.
+ 1. Clone or download this repo to a directory.
 
  2. Run `bundle install` in that directory.
 
@@ -16,7 +16,7 @@ Tested working in latest Chrome browser.
 
  5. Run `rake db:setup` to create the database for development and test envs.
 
-## Run
+## Running
 
  1. Run `rails s` to start the server at the default port 3000.
 
@@ -26,7 +26,7 @@ Tested working in latest Chrome browser.
 
 ## Testing
 
-For Rails, run `rake spec`.
+For Rails unit and feature specs, run `rake spec`.
 
 For Vue.js unit tests, run `yarn test`.
 
@@ -42,4 +42,4 @@ I've added `apipie-rails` gem to handle the API documentation, please visit `htt
 
 ## Miscellaneous
 
-The code is also written based on certain `rubocop` recommendations, run `rubocop` to verify if there's any offenses.
+The code is written based on certain `rubocop` recommendations, run `rubocop` to verify if there are any offenses.

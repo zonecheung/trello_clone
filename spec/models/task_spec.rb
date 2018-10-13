@@ -10,7 +10,7 @@ describe Task, 'validations', type: :model do
     expect(subject.position).to be_nil
   end
 
-  describe 'when task group is nil' do
+  context 'when task group is nil' do
     before(:each) do
       subject.task_group = nil
     end
@@ -18,7 +18,7 @@ describe Task, 'validations', type: :model do
     it { is_expected.not_to be_valid }
   end
 
-  describe 'when title is blank' do
+  context 'when title is blank' do
     before(:each) do
       subject.title = ''
     end
@@ -26,7 +26,7 @@ describe Task, 'validations', type: :model do
     it { is_expected.not_to be_valid }
   end
 
-  describe 'when title is 255 characters' do
+  context 'when title is 255 characters' do
     before(:each) do
       subject.title = 'a' * 255
     end
@@ -34,7 +34,7 @@ describe Task, 'validations', type: :model do
     it { is_expected.to be_valid }
   end
 
-  describe 'when title is 256 characters' do
+  context 'when title is 256 characters' do
     before(:each) do
       subject.title = 'a' * 256
     end
@@ -42,7 +42,7 @@ describe Task, 'validations', type: :model do
     it { is_expected.not_to be_valid }
   end
 
-  describe 'when created' do
+  context 'when created' do
     before(:each) do
       subject.save!
     end
@@ -51,7 +51,7 @@ describe Task, 'validations', type: :model do
       expect(subject.position).not_to be_nil
     end
 
-    describe 'when a new one is added in the same board' do
+    context 'when a new one is added in the same board' do
       let!(:another_task) do
         FactoryBot.create(:task, task_group: subject.task_group)
       end
@@ -64,7 +64,7 @@ describe Task, 'validations', type: :model do
         expect(another_task.position).not_to eql(subject.position)
       end
 
-      describe 'when the task group is destroyed' do
+      context 'when the task group is destroyed' do
         before(:each) do
           subject.task_group.destroy
         end
@@ -99,7 +99,7 @@ describe Task, 'move_to_position' do
     expect(task_group2.tasks.count).to eql(3)
   end
 
-  describe 'when moved in the same task group' do
+  context 'when moved in the same task group' do
     before(:each) do
       expect(task1_3.move_to_position(board.id, task_group1.id, 1)).to be(true)
       task_group1.reload
@@ -118,7 +118,7 @@ describe Task, 'move_to_position' do
     end
   end
 
-  describe 'when moved to a different task group' do
+  context 'when moved to a different task group' do
     before(:each) do
       expect(task1_1.move_to_position(board.id, task_group2.id, 1)).to be(true)
       task_group1.reload
@@ -148,7 +148,7 @@ describe Task, 'move_to_position' do
     end
   end
 
-  describe 'when moved to a non-existent task group' do
+  context 'when moved to a non-existent task group' do
     it 'should return false' do
       expect(task1_1.move_to_position(board.id, -1, 1)).to be(false)
     end
@@ -161,7 +161,7 @@ describe Task, 'move_to_position' do
     end
   end
 
-  describe 'when moved to a task group in different board' do
+  context 'when moved to a task group in different board' do
     let!(:another_board) { FactoryBot.create(:board) }
     let!(:another_task_group) do
       FactoryBot.create(:task_group, board: another_board)
@@ -187,7 +187,7 @@ describe Task, 'move_to_position' do
       expect(another_task_group.tasks).to include(task1_1)
     end
 
-    describe 'when the task group doesn\'t belong to the board' do
+    context 'when the task group doesn\'t belong to the board' do
       it 'should return false' do
         expect(
           task1_1.move_to_position(board.id, another_task_group.id, 1)

@@ -5,7 +5,7 @@ describe Board, 'validations', type: :model do
 
   it { is_expected.to be_valid }
 
-  describe 'when the title is blank' do
+  context 'when the title is blank' do
     before(:each) do
       subject.title = ''
     end
@@ -13,7 +13,7 @@ describe Board, 'validations', type: :model do
     it { is_expected.not_to be_valid }
   end
 
-  describe 'when title is 255 characters' do
+  context 'when title is 255 characters' do
     before(:each) do
       subject.title = 'a' * 255
     end
@@ -21,7 +21,7 @@ describe Board, 'validations', type: :model do
     it { is_expected.to be_valid }
   end
 
-  describe 'when title is 256 characters' do
+  context 'when title is 256 characters' do
     before(:each) do
       subject.title = 'a' * 256
     end
@@ -38,7 +38,7 @@ describe Board, 'after_create', type: :model do
     expect(subject.task_groups.count).to eql(0)
   end
 
-  describe 'when created' do
+  context 'when created' do
     before(:each) do
       subject.save!
     end

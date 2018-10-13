@@ -34,7 +34,7 @@
                         %option(v-for="move_to_board in parent.boards" :key="move_to_board.id" :value="move_to_board.id")
                           {{move_to_board.title}}
                 .field
-                  %label.label= I18n.t("shared.position")
+                  %label.label= I18n.t('shared.position')
                   .control
                     .select
                       %select(v-model="target_position")
@@ -46,7 +46,7 @@
                   = I18n.t('task_groups.move')
             %button.modal-close.is-large(v-on:click="parent.active_modal_task_group_id = null" aria-label="close")
 
-    %task(:task="task" v-for="task in task_group.tasks" :key="task.id")
+    %task.task-container(:task="task" v-for="task in task_group.tasks" :key="task.id")
     .content(v-show="!show_new_task_form")
       %a.new-task(v-on:click="showNewTaskForm()" v-show="!show_new_task_form")
         = '+ ' + I18n.t('tasks.add_another')

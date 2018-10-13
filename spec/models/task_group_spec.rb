@@ -10,7 +10,7 @@ describe TaskGroup, 'validations', type: :model do
     expect(subject.position).to be_nil
   end
 
-  describe 'when board is nil' do
+  context 'when board is nil' do
     before(:each) do
       subject.board = nil
     end
@@ -18,7 +18,7 @@ describe TaskGroup, 'validations', type: :model do
     it { is_expected.not_to be_valid }
   end
 
-  describe 'when title is blank' do
+  context 'when title is blank' do
     before(:each) do
       subject.title = ''
     end
@@ -26,7 +26,7 @@ describe TaskGroup, 'validations', type: :model do
     it { is_expected.not_to be_valid }
   end
 
-  describe 'when title is 255 characters' do
+  context 'when title is 255 characters' do
     before(:each) do
       subject.title = 'a' * 255
     end
@@ -34,7 +34,7 @@ describe TaskGroup, 'validations', type: :model do
     it { is_expected.to be_valid }
   end
 
-  describe 'when title is 256 characters' do
+  context 'when title is 256 characters' do
     before(:each) do
       subject.title = 'a' * 256
     end
@@ -42,7 +42,7 @@ describe TaskGroup, 'validations', type: :model do
     it { is_expected.not_to be_valid }
   end
 
-  describe 'when created' do
+  context 'when created' do
     before(:each) do
       subject.save!
     end
@@ -51,7 +51,7 @@ describe TaskGroup, 'validations', type: :model do
       expect(subject.position).not_to be_nil
     end
 
-    describe 'when a new one is added in the same board' do
+    context 'when a new one is added in the same board' do
       let!(:another_task_group) do
         FactoryBot.create(:task_group, board: subject.board)
       end
@@ -64,7 +64,7 @@ describe TaskGroup, 'validations', type: :model do
         expect(another_task_group.position).not_to eql(subject.position)
       end
 
-      describe 'when the board is destroyed' do
+      context 'when the board is destroyed' do
         before(:each) do
           subject.board.destroy
         end
@@ -95,7 +95,7 @@ describe TaskGroup, 'move_to_position' do
     expect(board.task_groups).to include(task_group3)
   end
 
-  describe 'when moved in the same board' do
+  context 'when moved in the same board' do
     it 'should not change the size of the task groups in the board' do
       expect { task_group3.move_to_position(board.id, 1) }.not_to(
         change { board.task_groups.count }
@@ -110,7 +110,7 @@ describe TaskGroup, 'move_to_position' do
     end
   end
 
-  describe 'when moved to a non-existent board' do
+  context 'when moved to a non-existent board' do
     it 'should return false' do
       expect(task_group1.move_to_position(-1, 1)).to be(false)
     end
@@ -123,7 +123,7 @@ describe TaskGroup, 'move_to_position' do
     end
   end
 
-  describe 'when moved to a different board' do
+  context 'when moved to a different board' do
     let(:another_board) { FactoryBot.create(:board) }
 
     it 'should return true' do
