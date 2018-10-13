@@ -4,17 +4,41 @@ module Api
     before_action :set_task_group,
                   only: %i[show update destroy move_to_position]
 
+    def_param_group :board_id do
+      param :board_id, :number, desc: 'Board ID', required: true
+    end
+
     # GET /api/task_groups.json
+    api :GET, '/boards/:board_id/task_groups',
+        'Retrieve task groups for the board.'
+    param_group :board_id
     def index
       render json: @board.task_groups
     end
 
+    def_param_group :task_group_id do
+      param :id, :number, desc: 'Task group ID', required: true
+    end
+
     # GET /api/task_groups/1.json
+    api :GET, '/boards/:board_id/task_groups/:id', 'Retrieve task group.'
+    param_group :board_id
+    param_group :task_group_id
     def show
       render json: @task_group
     end
 
+    def_param_group :task_group do
+      param :task_group, Hash, desc: 'Task group info', required: true do
+        param_group :board_id
+        param :title, String, desc: 'Task group title', required: true
+      end
+    end
+
     # POST /api/task_groups.json
+    api :POST, '/boards/:board_id/task_groups', 'Create task group.'
+    param_group :board_id
+    param_group :task_group
     def create
       task_group = TaskGroup.new(task_group_params)
 
@@ -27,6 +51,10 @@ module Api
     end
 
     # PATCH/PUT /api/task_groups/1.json
+    api :PATCH, '/boards/:board_id/task_groups/:id', 'Update task group.'
+    param_group :board_id
+    param_group :task_group_id
+    param_group :task_group
     def update
       if @task_group.update(task_group_params)
         render json: @task_group
@@ -37,6 +65,9 @@ module Api
     end
 
     # DELETE /api/task_groups/1.json
+    api :DELETE, '/boards/:board_id/task_groups/:id', 'Delete task group.'
+    param_group :board_id
+    param_group :task_group_id
     def destroy
       if @task_group.destroy
         head :no_content
@@ -47,6 +78,12 @@ module Api
     end
 
     # PATCH /api/task_groups/1/move_to_position.json
+    api :PATCH, '/boards/:board_id/task_groups/:id/move_to_position',
+        'Move task group to a different position in the same or another board.'
+    param_group :board_id
+    param_group :task_group_id
+    param :target_board_id, :number, desc: 'Target board ID', required: true
+    param :position, :number, desc: 'New position', required: true
     def move_to_position
       if @task_group.move_to_position(params[:target_board_id].to_i,
                                       params[:position].to_i)

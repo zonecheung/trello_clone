@@ -28,11 +28,17 @@ Tested working in latest Chrome browser.
 
 For Rails, run `rake spec`.
 
+For Vue.js unit tests, run `yarn test`.
+
 ## Files & Directories
 
 The files for Rails are located in `app` directory as usual, and the specs are in `spec`.
 
 The files for Vue.js are located in `app/javascript/packs`, and the tests are in `test/javascripts`.
+
+## API Documentation
+
+I've added `apipie-rails` gem to handle the API documentation, please visit `http://localhost:3000/apipie` to view the list.
 
 ## Miscellaneous
 

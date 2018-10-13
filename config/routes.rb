@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  apipie
   namespace :api, defaults: { format: :json } do
     resources :boards do
       get :latest, on: :collection

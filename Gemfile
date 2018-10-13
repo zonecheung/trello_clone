@@ -37,6 +37,7 @@ gem 'jbuilder', '~> 2.7.0'
 gem 'bootsnap', '>= 1.1.0', require: false
 
 gem 'acts_as_list', '~> 0.9.16'
+gem 'apipie-rails', '~> 0.5.10'
 gem 'bulma-rails', '~> 0.7.1'
 gem 'foreman', '~> 0.64.0'
 gem 'haml', '~> 5.0.4'
