@@ -93,6 +93,7 @@ export default
             board_id: @board.id
         )
           .then (res) ->
+            res.data.tasks = [] unless res.data.tasks
             that.board.task_groups.push(res.data)
             that.closeTaskGroupForm()
           .catch @commonAxiosErrorHandler
