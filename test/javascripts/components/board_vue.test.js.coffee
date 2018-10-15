@@ -205,6 +205,7 @@ describe 'Board component', ->
           vm.$nextTick ->
             expect(vm.board.task_groups.length).toEqual(size + 1)
             expect(vm.board.task_groups.pop().id).toEqual(555)
+            expect(vm.board.task_groups.pop().tasks.length).toEqual(0)
 
       it 'should close the new task group form', ->
         vm.$nextTick ->
